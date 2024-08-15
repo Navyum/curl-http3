@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image（linux/arm64）
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s) --platform=linux/arm64
+      run: docker build . --file Dockerfile --tag curl-http3:$(date +%s) --platform=linux/arm64
