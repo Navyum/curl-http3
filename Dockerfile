@@ -5,7 +5,7 @@ LABEL maintainer="Navyum <yhj2433488839@gmail.com>"
 WORKDIR /opt
 
 ARG CURL_VERSION=curl-8_2_1
-ARG QUICHE_VERSION=0.22.0
+ARG QUICHE_VERSION=0.18.0
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential git autoconf libtool cmake curl libnghttp2-dev zlib1g-dev;
