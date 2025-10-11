@@ -1,10 +1,11 @@
-# curl-http3
+# curl-http3（curl 8.2.1）
 
-一个支持HTTP/3的curl Docker镜像，基于Debian构建，集成了Cloudflare的quiche库。
+一个支持体积很小的HTTP/3的curl Docker镜像，基于Debian构建，集成了Cloudflare的quiche库。
 
 ## 功能特性
 
-- ✅ 支持HTTP/3协议
+- ✅ 支持HTTP/3、HTTP/2协议
+- ✅ quiche-lib（QUIC 协议）
 - ✅ 基于Debian 12-slim，体积优化(~230MB)
 - ✅ 集成httpstat工具
 - ✅ 多平台支持（amd64, arm64）
