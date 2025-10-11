@@ -14,6 +14,8 @@ RUN apt-get update && \
         build-essential \
         git \
         autoconf \
+        automake \
+        autotools-dev \
         libtool \
         cmake \
         curl \
@@ -48,7 +50,7 @@ RUN apt-get update && \
     cd /opt && \
     rm -rf quiche curl && \
     rm -rf ~/.cargo/registry ~/.cargo/git && \
-    apt-get purge -y build-essential git autoconf libtool cmake curl && \
+    apt-get purge -y build-essential git autoconf automake autotools-dev libtool cmake curl && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
