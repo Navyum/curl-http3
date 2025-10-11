@@ -1,0 +1,31 @@
+FROM debian:12 AS builder
+
+WORKDIR /opt
+
+# 安装构建依赖，包括ca-certificates
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        autoconf \
+        libtool \
+        cmake \
+        curl \
+        ca-certificates \
+        libnghttp2-dev \
+        zlib1g-dev && \
+    # 测试SSL连接
+    curl -s https://github.com > /dev/null && echo "SSL test passed" && \
+    # 清理
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+FROM debian:12-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+CMD ["echo", "SSL certificates test completed"]
