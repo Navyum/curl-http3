@@ -45,13 +45,11 @@ RUN apt-get update && \
         --with-nghttp2 \
         --with-zlib && \
     make && \
-    make DESTDIR="/debian/" install && \
-    # 清理构建缓存和临时文件
-    cd /opt && \
-    rm -rf quiche curl && \
-    rm -rf ~/.cargo/registry ~/.cargo/git && \
-    apt-get purge -y build-essential git autoconf automake autotools-dev libtool cmake curl && \
-    apt-get autoremove -y && \
+    make DESTDIR="/debian/" install
+
+# 多阶段构建中，builder阶段的内容不会进入最终镜像
+# 这里只做最小清理以避免缓存问题
+RUN rm -rf ~/.cargo/registry ~/.cargo/git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
