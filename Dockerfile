@@ -8,7 +8,6 @@ ARG CURL_VERSION=curl-8_2_1
 ARG QUICHE_VERSION=0.18.0
 
 # 合并所有构建步骤到一个RUN命令中，减少镜像层数
-# 使用--no-install-recommends减少不必要的包
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         build-essential \
@@ -45,17 +44,15 @@ RUN apt-get update && \
         --with-nghttp2 \
         --with-zlib && \
     make && \
-    make DESTDIR="/debian/" install
-
-# 多阶段构建中，builder阶段的内容不会进入最终镜像
-# 这里只做最小清理以避免缓存问题
-RUN rm -rf ~/.cargo/registry ~/.cargo/git && \
+    make DESTDIR="/debian/" install && \
+    # 清理构建缓存
+    rm -rf ~/.cargo/registry ~/.cargo/git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 FROM debian:12-slim
 
-# 只安装运行时必需的包，使用--no-install-recommends
+# 只安装运行时必需的包
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -64,9 +61,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 复制构建产物
-COPY --from=builder /debian/usr/local/ /usr/local/
-COPY --from=builder /opt/quiche/target/release /opt/quiche/target/release
+# 只复制必要的文件，避免复制整个目录
+COPY --from=builder /debian/usr/local/bin/curl /usr/local/bin/curl
+COPY --from=builder /debian/usr/local/lib/ /usr/local/lib/
+COPY --from=builder /opt/quiche/target/release/libquiche.so* /usr/local/lib/
+COPY --from=builder /opt/quiche/target/release/libcrypto.so* /usr/local/lib/
+COPY --from=builder /opt/quiche/target/release/libssl.so* /usr/local/lib/
 
 # 更新动态链接库缓存
 RUN ldconfig
