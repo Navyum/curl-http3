@@ -37,10 +37,8 @@ jobs:
         tags: |
           type=ref,event=branch
           type=ref,event=pr
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
+          type=ref,event=tag
           type=raw,value=latest,enable={{is_default_branch}}
-          type=raw,value={{version}},enable={{is_tag}}
 
     - name: Debug metadata
       run: |
